@@ -5,6 +5,8 @@ Promises Workshop: construye la libreria de ES6 promises, pledge.js
 // // TU CÓDIGO AQUÍ:
 
 function $Promise(executor) { // Recibe por parámetro executor, que es una función, que es la que va a decir si una promesa se resuelve o se rechaza
+    // constructor () {} // Se debe usar constructor si se hace con constructor de clase
+    
     if(typeof executor !== "function") { // Comprueba que executor sea una función
         throw TypeError("Executor must be a function")
     }
