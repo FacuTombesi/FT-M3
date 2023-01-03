@@ -68,7 +68,7 @@ const viewsController = (name, res) => {
   if (!name) { // Si no hay name
     const html = fs.readFileSync("./index.html") // Lee y guarda el archivo index
     return res.writeHead(200, { "Content-Type": "text/html" }).end(html) // Devuelve el html
-  } else {
+  } else if (name !== "favicon.ico") {
     const fullName = name.replace("%20", " ")
     const beatle = beatles.find((b) => b.name == fullName)
     let html = fs.readFileSync("./beatle.html", "utf-8") // Busca y lee a cada Beatle y reemplaza la info dependiendo de quién reciba
