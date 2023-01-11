@@ -1,6 +1,7 @@
-let { posts, users } = require("../data")
+// let { posts, users } = require("../data")
+const { User, Post } = require("../db")
 
-let id = 3
+// let id = 3
 
 const getPosts = () => {
     if (!posts.length) throw Error("There are no posts yet")

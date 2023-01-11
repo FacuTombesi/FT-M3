@@ -13,13 +13,13 @@ const usersRouter = Router()
 
 // HANDLERS
 // GET /users y GET /users?name=
-usersRouter.get("/", (req, res) => { // Al estar trabajando directamente en users, no es necesario aclarar "/users"
+usersRouter.get("/", async (req, res) => { // Al estar trabajando directamente en users, no es necesario aclarar "/users"
     // Si tengo query name, quiero buscar, si no, mando todo
     const { name } = req.query // Tomo lo que necesito
     let users // Lo declaro vacío primero para que luego tome un valor u otro
     try {
         if (name) /* Busco user */ users = findUsers(name)
-        else /* Mando todo */ users = getUsers()
+        else /* Mando todo */ users = await getUsers()
         res.status(200).json(users)
     }   catch (error) {
         res.status(400).json({ error: error.message })
@@ -27,10 +27,10 @@ usersRouter.get("/", (req, res) => { // Al estar trabajando directamente en user
 })
 
 // GET /users/:id
-usersRouter.get("/:id", (req, res) => {
+usersRouter.get("/:id", async (req, res) => {
     const { id } = req.params
     try {
-        const user = getUserById(id)
+        const user = await getUserById(id)
         res.status(200).json(user)
     }   catch (error) {
         res.status(400).json({ error: error.message })
@@ -38,10 +38,10 @@ usersRouter.get("/:id", (req, res) => {
 })
 
 // POST /users
-usersRouter.post("/", (req, res) => {
+usersRouter.post("/", async (req, res) => {
     try {
-        const { name, lastname, email } = req.body
-        const newUser = createUser(name, lastname, email)
+        const { name, email, phone, gender } = req.body
+        const newUser = await createUser(name, email, phone, gender)
         res.status(200).json(newUser)
     }   catch (error) {
         res.status(400).json({ error: error.message })
@@ -50,9 +50,9 @@ usersRouter.post("/", (req, res) => {
 
 // PUT /users
 usersRouter.put("/", (req, res) => {
-    const { id, name, lastname, email } = req.body
+    const { id, name, email, phone, gender } = req.body
     try {
-        const updatedUser = updateUser(id, name, lastname, email)
+        const updatedUser = updateUser(id, name, email, phone, gender)
         res.status(200).json(updatedUser)
     }   catch (error) {
         res.status(400).json({ error: error.message })
