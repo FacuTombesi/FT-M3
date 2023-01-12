@@ -53,7 +53,6 @@ const getUserById = async (id) => {
 }
 
 const createUser = async (name, email, phone, gender) => {
-    // Método sin models
     // if (!name || !email || !phone || !gender) throw Error("Missing data")
     // const newUser = {
     //     id: id++, // Pone el id actual y lo aumenta para el próximo user que se cree
@@ -70,16 +69,26 @@ const createUser = async (name, email, phone, gender) => {
     return newUser
 }
 
-// const updateUser = (id, name, email, phone, gender) => {
-//     if (!id || !name || !email || !phone || !gender) throw Error("Missing data")
-//     const user = users.find((user) => user.id == id)
-//     if (!user) throw Error(`User ${id} does not exist`)
-//     user.name = name
-//     user.email = email
-//     user.phone = phone
-//     user.gender = gender
-//     return user
-// }
+const updateUser = async (id, name, email, phone, gender) => {
+    // if (!id || !name || !email || !phone || !gender) throw Error("Missing data")
+    // const user = users.find((user) => user.id == id)
+    // if (!user) throw Error(`User ${id} does not exist`)
+    // user.name = name
+    // user.email = email
+    // user.phone = phone
+    // user.gender = gender
+    // return user
+
+    if (!id || !name || !email || !phone || !gender) throw Error("Missing data")
+    const user = await User.findByPk(id)
+    if (!user) throw Error(`User ${id} does not exist`)
+    user.name = name
+    user.email = email
+    user.phone = phone
+    user.gender = gender
+    await user.save() // .save() guarda los cambios en el usuario
+    return user
+}
 
 const deleteUser = async (id) => {
     // const user = users.find((user) => user.id == id) // Busco si existe un usuario con el id recibido
@@ -99,6 +108,6 @@ module.exports = {
     findUsers, 
     getUserById, 
     createUser, 
-    // updateUser,
+    updateUser,
     deleteUser 
 }

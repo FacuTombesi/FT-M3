@@ -49,10 +49,10 @@ usersRouter.post("/", async (req, res) => {
 })
 
 // PUT /users
-usersRouter.put("/", (req, res) => {
+usersRouter.put("/", async (req, res) => {
     const { id, name, email, phone, gender } = req.body
     try {
-        const updatedUser = updateUser(id, name, email, phone, gender)
+        const updatedUser = await updateUser(id, name, email, phone, gender)
         res.status(200).json(updatedUser)
     }   catch (error) {
         res.status(400).json({ error: error.message })
