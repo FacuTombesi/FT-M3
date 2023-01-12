@@ -1,12 +1,22 @@
 // let { users } = require("../data")
 const { Op } = require("sequelize") // Importo Op para usar sus métodos
-const { User } = require("../db") // Ahora User es el modelo que está en db 
+const { User, Page } = require("../db") // Ahora User es el modelo que está en db 
 
 // let id = 6
 
 // TODOS LOS CONTROLADORES DE USUARIOS
 const getUsers = async () => {
-    const user = await User.findAll() // .findAll() busca y devuelve todo
+    const user = await User.findAll({
+        include: { // include es como un JOIN que agrega el modelo Page al modelo User. Sequelize ya sabe que usuario sigue a cada página por la relación de Many-To-Many a través de sus IDs
+            // De la tabla con la que se relaciona User (osea, Page), traeme...
+            model: Page,
+            attributes: ["title"], // attributes trae sólo el atributo que le especifique
+            // Y de la tabla intermedia...
+            through: { // through trae los atributos que yo le especifique
+                attributes: [] // Si le paso un array vacío, no me trae ninguno
+            }
+        }
+    }) // .findAll() busca y devuelve todo
     return user
 }
 
@@ -82,7 +92,6 @@ const deleteUser = async (id) => {
     await userToDelete.destroy() // Destruyo el usuario requerido y lo devuelvo
     return userToDelete
 }
-
 
 
 module.exports = { 
