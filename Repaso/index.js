@@ -9,8 +9,13 @@ database
     // alter: true ==> actualiza las tablas en base al modelo sin eliminarlas
     .then((res) => { 
         app.listen(PORT, () => { // Cuando se conecta, se pone a escuchar al servidor
-            console.log("listening on port", PORT)
+            console.log(`Listening on port: ${PORT}`)
         })
     }) 
     .catch((err) => console.log(error)) // Pongo un catch para el caso en que se produzca un error 
-    
+
+// OTRA FORMA
+// app.listen(PORT, () => {
+//     console.log(`Listening on port: ${PORT}`)
+//     databbase.sync({ force: true })
+// })

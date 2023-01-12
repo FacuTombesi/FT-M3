@@ -18,7 +18,7 @@ usersRouter.get("/", async (req, res) => { // Al estar trabajando directamente e
     const { name } = req.query // Tomo lo que necesito
     let users // Lo declaro vacío primero para que luego tome un valor u otro
     try {
-        if (name) /* Busco user */ users = findUsers(name)
+        if (name) /* Busco user */ users = await findUsers(name)
         else /* Mando todo */ users = await getUsers()
         res.status(200).json(users)
     }   catch (error) {
@@ -60,10 +60,10 @@ usersRouter.put("/", (req, res) => {
 })
 
 // DELETE /users/:id/delete
-usersRouter.delete("/:id/delete", (req, res) => {
+usersRouter.delete("/:id/delete", async (req, res) => {
     const { id } = req.params
     try {
-        const deletedUser = deleteUser(id)
+        const deletedUser = await deleteUser(id)
         res.status(200).json(deletedUser)
     }   catch (error) {
         res.status(400).json({ error: error.message })

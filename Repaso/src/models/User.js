@@ -16,10 +16,11 @@ module.exports = (database) => { // Exporto una función que define el modelo qu
             unique: true // Reemplaza al tipo de dato UNIQUE de SQL
         },
         phone: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            unique: true
         },
         gender: {
             type: DataTypes.ENUM("Male", "Female") // ENUM() permite dar opciones
         }
-    })
+    }, { timestamps: false }) // Borra los createdAt y updatedAt de la tabla
 }

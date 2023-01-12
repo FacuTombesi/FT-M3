@@ -1,4 +1,5 @@
 // let { users } = require("../data")
+const { Op } = require("sequelize") // Importo Op para usar sus métodos
 const { User } = require("../db") // Ahora User es el modelo que está en db 
 
 // let id = 6
@@ -9,11 +10,17 @@ const getUsers = async () => {
     return user
 }
 
-// const findUsers = (name) => { // Creo un filtro para buscar usuarios por nombre
-//     const results = users.filter((user) => user.name === name)
-//     if (!results.length) throw Error(`No users found with name: ${name}`)
-//     return results
-// }
+const findUsers = async (name) => { // Creo un filtro para buscar usuarios por nombre
+    // const results = users.filter((user) => user.name === name)
+    // if (!results.length) throw Error(`No users found with name: ${name}`)
+    // return results
+
+    const results = await User.findAll({ where: { 
+        name: { [Op.iLike]: `%${name}%` } // [Op.iLike] funciona como LIKE en PostgresSQL donde se le para un atributo con % para buscar si hay propiedades que contengan ese atributo
+    } })
+    if (!results) throw Error(`No users found with name: ${name}`)
+    return results
+}
 
 const getUserById = async (id) => {
     // const user = users.find((user) => user.id == id) // Se usa == y no === porque uno es un string y el otro es un número
@@ -22,6 +29,17 @@ const getUserById = async (id) => {
 
     const user = await User.findByPk(id) // Busca por primary key
     return user
+    // Si quiero buscar uno sólo por parámetro...
+    // const user = await User.findOne({ where: { id: "1" } })
+
+    // Si quiero buscar, o crear si no existe (MUY condicional)...
+    // const [user, created] = await User.findOrCreate({
+    //     where: { name: "Facu" },
+    //     defaults: {
+    //         gender: "Male",
+    //         email: "ftombesi@gmail.com"
+    //     }
+    // })
 }
 
 const createUser = async (name, email, phone, gender) => {
@@ -38,6 +56,7 @@ const createUser = async (name, email, phone, gender) => {
     // return newUser
 
     const newUser = await User.create({ name, email, phone, gender }) // Ahora sequelize devuelve una promesa
+    // await newUser.destroy() => Elimina la entrada de la tabla
     return newUser
 }
 
@@ -52,20 +71,25 @@ const createUser = async (name, email, phone, gender) => {
 //     return user
 // }
 
-// const deleteUser = (id) => {
-//     const user = users.find((user) => user.id == id) // Busco si existe un usuario con el id recibido
-//     if (!user) throw Error(`User ${id} does not exist`)
-//     users = users.filter((user) => user.id != id) // Filtro el array de users y me devuelve un array nuevo sin el user con el id que busqué 
-//     return user
-// }
+const deleteUser = async (id) => {
+    // const user = users.find((user) => user.id == id) // Busco si existe un usuario con el id recibido
+    // if (!user) throw Error(`User ${id} does not exist`)
+    // users = users.filter((user) => user.id != id) // Filtro el array de users y me devuelve un array nuevo sin el user con el id que busqué 
+    // return user
+
+    const userToDelete = await User.findByPk(id) // Guardo el usuario que quiero borrar buscándolo por su PK
+    if (!userToDelete) throw Error(`User ${id} does not exist`)
+    await userToDelete.destroy() // Destruyo el usuario requerido y lo devuelvo
+    return userToDelete
+}
 
 
 
 module.exports = { 
     getUsers, 
-    // findUsers, 
+    findUsers, 
     getUserById, 
     createUser, 
     // updateUser,
-    // deleteUser 
+    deleteUser 
 }
